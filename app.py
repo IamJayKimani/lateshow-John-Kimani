@@ -101,15 +101,6 @@ def create_appearance():
         if not guest:
             return jsonify({'errors': ['Guest not found']}), 404
         
-        # Check for existing appearance
-        existing_appearance = Appearance.query.filter_by(
-            episode_id=data['episode_id'],
-            guest_id=data['guest_id']
-        ).first()
-        
-        if existing_appearance:
-            return jsonify({'errors': ['Appearance already exists']}), 400
-        
         # Create new appearance
         appearance = Appearance(
             rating=data['rating'],

@@ -23,7 +23,7 @@ class Episode(db.Model):
     
     # Relationships
     appearances = db.relationship('Appearance', back_populates='episode', cascade='all, delete-orphan')
-    guests = db.relationship('Guest', secondary='appearances', back_populates='episodes')
+    guests = db.relationship('Guest', secondary='appearances', back_populates='episodes', overlaps="appearances")
     
     def to_dict(self, include_appearances=False):
         data = {
@@ -46,7 +46,7 @@ class Guest(db.Model):
     
     # Relationships
     appearances = db.relationship('Appearance', back_populates='guest', cascade='all, delete-orphan')
-    episodes = db.relationship('Episode', secondary='appearances', back_populates='guests')
+    episodes = db.relationship('Episode', secondary='appearances', back_populates='guests', overlaps="appearances")
     
     def to_dict(self):
         return {
@@ -66,8 +66,8 @@ class Appearance(db.Model):
     guest_id = db.Column(db.Integer, db.ForeignKey('guests.id'), nullable=False)
     
     # Relationships
-    episode = db.relationship('Episode', back_populates='appearances')
-    guest = db.relationship('Guest', back_populates='appearances')
+    episode = db.relationship('Episode', back_populates='appearances', overlaps="guests")
+    guest = db.relationship('Guest', back_populates='appearances', overlaps="episodes")
     
     # Validations
     @validates('rating')
